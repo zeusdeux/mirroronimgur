@@ -13,7 +13,7 @@ class MirrorOnImgurBot(tweepy.StreamListener):
 
     def __init__(self):
         # bot twitter user name
-        self.username = 'mirroronimgur' # change to mirroronimgur
+        self.username = 'mirroronimgur'
 
         self.auth_twitter()
         self.auth_imgur()
@@ -62,7 +62,6 @@ class MirrorOnImgurBot(tweepy.StreamListener):
         log.info('Message from: %r' % sender_username)
         log.info('Is the bot mentioned? %r' % bot_is_mentioned)
 
-        # print "is the bot mentioned? %r" % bot_is_mentioned
         # if it's not a retweet and it isn't a tweet to myself from my own account
         # and if bot is mentioned then do stuff
         if not data['retweeted'] and sender_username != self.username and bot_is_mentioned:
