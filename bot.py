@@ -73,28 +73,38 @@ class MirrorOnImgurBot(tweepy.StreamListener):
                 log.error('Error: %r', e)
                 url = ''
             finally:
-                self.handle_msg(url, tweet_id, sender_username)
+                self.handle_url(url, tweet_id, sender_username)
 
-    def handle_msg(self, url, tweet_id, sender_username):
+    def handle_url(self, url, tweet_id, sender_username):
         """ Decide what to do based on url
         If it's valid, upload to imgur else reply with an error message
         """
 
+        sender_username = '@' + sender_username
+
         log.info('Url received: %r' % url)
+        log.info('Reply to user: %r' % sender_username)
 
-        parsedUrl = urlparse(url)
+        try:
+            parsedUrl = urlparse(url)
 
-        # if the url is indeed valid (has a hostname)
-        if parsedUrl.netloc != '':
-            imgur_reply = self.imgur_client.upload_from_url(url)
-            msg         = '@' + sender_username + ' ' + imgur_reply.get('link', 'Upload failed')
-            log.debug('Imgur response: %r' % imgur_reply)
-            log.info('Bot reply: %r to tweet id %r' % (msg, tweet_id))
-            self.api.update_status(status = msg, in_reply_to_status_id = tweet_id)
-        else:
-            self.api.update_status(status = '@' + sender_username + ' ' + 'send me a valid url please :)', in_reply_to_status_id = tweet_id)
+            # if the url is indeed valid (has a hostname)
+            if parsedUrl.netloc != '':
+                # mirror on imgur
+                imgur_reply = self.imgur_client.upload_from_url(url)
+                msg         = sender_username + ' ' + imgur_reply.get('link', 'Upload failed')
 
-        log.info('Reply sent')
+                log.debug('Imgur response: %r' % imgur_reply)
+                log.info('Bot reply: %r to tweet id %r' % (msg, tweet_id))
+
+                self.api.update_status(status = msg, in_reply_to_status_id = tweet_id)
+            else:
+                self.api.update_status(status = sender_username + ' ' + 'send me a valid url please :)', in_reply_to_status_id = tweet_id)
+        except Exception as e:
+            log.error('Error: %r' % e)
+            self.api.update_status(status = sender_username + ' ' + 'something went wrong. womp womp :(', in_reply_to_status_id = tweet_id)
+        finally:
+            log.info('Reply sent')
 
 if __name__ == '__main__':
     bot = MirrorOnImgurBot()
