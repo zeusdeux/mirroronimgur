@@ -71,8 +71,8 @@ class MirrorOnImgurBot(tweepy.StreamListener):
                 url  = 'http' + data.get('text', '').split('http')[1].strip().split()[0].strip()
             except Exception as e:
                 log.error('Error: %r', e)
-            finally:
                 url = ''
+            finally:
                 self.handle_msg(url, tweet_id, sender_username)
 
     def handle_msg(self, url, tweet_id, sender_username):
@@ -92,7 +92,7 @@ class MirrorOnImgurBot(tweepy.StreamListener):
             log.info('Bot reply: %r to tweet id %r' % (msg, tweet_id))
             self.api.update_status(status = msg, in_reply_to_status_id = tweet_id)
         else:
-            self.api.update_status(status = 'Send me a valid url please :)', in_reply_to_status_id = tweet_id)
+            self.api.update_status(status = '@' + sender_username + ' ' + 'send me a valid url please :)', in_reply_to_status_id = tweet_id)
 
         log.info('Reply sent')
 
