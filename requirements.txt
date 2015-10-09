@@ -1,0 +1,2 @@
+tweepy==3.4.0
+imgurpython==1.1.6

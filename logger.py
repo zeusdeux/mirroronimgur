@@ -1,0 +1,48 @@
+import os
+import logging
+
+def logger_setup(name):
+    # capture warnings from other ppl/packages logging
+    logging.captureWarnings(True)
+
+    loglevel = ''
+
+    try:
+        if os.environ['MOI_LOGLEVEL'] == 'DEBUG':
+            loglevel = logging.DEBUG
+
+        if os.environ['MOI_LOGLEVEL'] == 'INFO':
+            loglevel = logging.INFO
+
+        if os.environ['MOI_LOGLEVEL'] == 'WARN':
+            loglevel = logging.WARN
+    except:
+        loglevel = logging.DEBUG
+
+    # from https://docs.python.org/2/howto/logging.html#configuring-logging
+    # set up new logger for this file
+    logger = logging.getLogger(name)
+    logger.setLevel(loglevel)
+
+    # formatter
+    formatter = logging.Formatter('PID: %(process)d - %(asctime)s - %(name)s - %(levelname)s - %(funcName)s - %(message)s')
+
+    # console handler for logging
+    conLog = logging.StreamHandler()
+    conLog.setLevel(loglevel)
+    # format console logs using formatter
+    conLog.setFormatter(formatter)
+
+    # log to file handler
+    fileLog = logging.FileHandler('mirroronimgur.log', encoding='utf-8')
+    fileLog.setLevel(logging.DEBUG)
+    # format console logs using formatter
+    fileLog.setFormatter(formatter)
+
+    # add console logging transport to logger
+    logger.addHandler(conLog)
+
+    # add file transport to logger
+    logger.addHandler(fileLog)
+
+    return logger
