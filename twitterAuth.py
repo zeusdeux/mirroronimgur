@@ -1,4 +1,5 @@
 import tweepy, creds
+from logger import logger_setup
 
 log = logger_setup('twitterauth')
 

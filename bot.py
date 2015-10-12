@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import json
+import tweepy, json
 from urlparse import urlparse, urlunparse
 from logger import logger_setup
 from twitterAuth import TwitterAuth
@@ -92,5 +92,5 @@ class MirrorOnImgurBot(tweepy.StreamListener):
 
 if __name__ == '__main__':
     bot = MirrorOnImgurBot()
-    stream = tweepy.Stream(auth = bot.auth, listener = bot)
+    stream = tweepy.Stream(auth = bot.twitter.auth, listener = bot)
     stream.filter(track=[bot.username])

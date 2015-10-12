@@ -1,5 +1,6 @@
 import creds
 from imgurpython import ImgurClient
+from logger import logger_setup
 
 log = logger_setup('imgurauth')
 
